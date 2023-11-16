@@ -2,30 +2,35 @@
 using System.Net.Sockets;
 namespace ServerClientLib
 {
-    public partial class ServerLib
+    public partial class Server
     {
         public class Connection
         {
+            private Socket _handler;
             private readonly QueueThread _thread = new QueueThread();
-            public Socket Handler { get; private set; }
             public string Id { get; private set; }
 
             public Connection(Socket handler, string id)
             {
-                Handler = handler;
+                _handler = handler;
                 Id = id;
             }
 
-            public void PostJob(Action a)
+            public void Send(byte[] msgBytes)
             {
-                _thread.Enqueue(a);
+                _thread.Enqueue(() => _handler.Send(msgBytes));
+            }
+
+            public int Receive(byte[] buffer)
+            {
+                return _handler.Receive(buffer);
             }
 
             public void Close()
             {
-                Handler.Shutdown(SocketShutdown.Both);
-                Handler.Close();
-                Handler.Dispose();
+                _handler.Shutdown(SocketShutdown.Both);
+                _handler.Close();
+                _handler.Dispose();
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace ServerClientLib
 {
-    public partial class ServerLib
+    public partial class Server
     {
         private readonly int _maxConnections;
         private readonly Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream,ProtocolType.Tcp);
@@ -15,7 +15,7 @@ namespace ServerClientLib
         private readonly List<Connection> _connections = new List<Connection>();
         private Queue<string> _messageQueue = new Queue<string>();
         
-        public ServerLib(EndPoint endPoint = null, int maxConnections = -1)
+        public Server(int maxConnections, EndPoint endPoint = null)
         {
             _maxConnections = maxConnections;
             _socket.Bind(endPoint ?? new IPEndPoint(0,5000));
@@ -31,17 +31,13 @@ namespace ServerClientLib
         }
         public void Send(string msg,Connection connection)
         {
-            connection.Handler.Send(Encoding.UTF8.GetBytes(msg));
+            connection.Send(Encoding.UTF8.GetBytes(msg));
         }
         
 
         private void StartListening()
         {
-            Func<bool> condition = () => _connections.Count <= _maxConnections;
-            if (_maxConnections == -1)
-                condition = () => true;
-            
-            while (condition())
+            while (_connections.Count <= _maxConnections)
             {
                 var handler = _socket.Accept();
                 var connection = new Connection(handler, "p" + _connectionId++);
@@ -55,7 +51,7 @@ namespace ServerClientLib
             while (true)
             {
                 var buffer = new byte[20];
-                var received= connection.Handler.Receive(buffer);
+                var received= connection.Receive(buffer);
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
                 RecievedMessage?.Invoke();

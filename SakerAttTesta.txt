@@ -1,0 +1,4 @@
+*CLient disconnectar eller dör -> just nu krash
+*Skicka vääldigt mycket
+skicka från 2 olika clienter mycket
+Skicka data som är större en 20 byte -> 12345678990avawdawdaadwwa
