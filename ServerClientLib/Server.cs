@@ -22,9 +22,9 @@ namespace ServerClientLib
             _socket.Listen(100);
             new Thread(StartListening).Start();
         }
-        public delegate void Notify();
-        public event Notify ReceivedMessage;
-        public event Notify MaxConnectionReached;
+
+        public event Action<Connection> ReceivedMessage;
+        public event Action MaxConnectionReached;
         public List<Connection> GetConnection => _connections;
         public string GetMessage()
         {
@@ -57,7 +57,7 @@ namespace ServerClientLib
                 var received= connection.Receive(buffer);
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
-                ReceivedMessage?.Invoke();
+                ReceivedMessage?.Invoke(connection);
             }
         }
         
