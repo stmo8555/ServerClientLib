@@ -12,7 +12,7 @@ namespace ServerClientLib
     {
         private readonly int _maxConnections;
         private readonly Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream,ProtocolType.Tcp);
-        private int _connectionId = 0;
+        private int _connectionId = 1;
         private readonly List<Connection> _connections = new List<Connection>();
         private Queue<string> _messageQueue = new Queue<string>();
         
@@ -42,7 +42,8 @@ namespace ServerClientLib
             while (_connections.Count <= _maxConnections)
             {
                 var handler = _socket.Accept();
-                var connection = new Connection(handler, "p" + _connectionId++);
+                var connection = new Connection(handler,_connectionId.ToString());
+                _connectionId++;
                 _connections.Add(connection);
                 new Thread(() => Receive(connection)).Start();
             }
