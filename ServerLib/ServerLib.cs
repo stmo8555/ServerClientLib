@@ -14,7 +14,7 @@ namespace ServerClientLib
         private int _connectionId = 0;
         private readonly List<Connection> _connections = new List<Connection>();
         private Queue<string> _messageQueue = new Queue<string>();
-
+        
         public ServerLib(EndPoint endPoint = null, int maxConnections = -1)
         {
             _maxConnections = maxConnections;
@@ -22,6 +22,18 @@ namespace ServerClientLib
             _socket.Listen(100);
             new Thread(StartListening).Start();
         }
+        public delegate void Notify();
+        public event Notify RecievedMessage;
+        public List<Connection> GetConnection => _connections;
+        public string GetMessage()
+        {
+            return _messageQueue.Dequeue();
+        }
+        public void Send(string msg,Connection connection)
+        {
+            connection.Handler.Send(Encoding.UTF8.GetBytes(msg));
+        }
+        
 
         private void StartListening()
         {
@@ -47,16 +59,9 @@ namespace ServerClientLib
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
                 RecievedMessage?.Invoke();
-
             }
         }
-
-        public string GetMessage()
-        {
-            return _messageQueue.Dequeue();
-        }
         
-        public delegate void Notify();
-        public event Notify RecievedMessage;
+        
     }
 }

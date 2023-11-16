@@ -1,11 +1,12 @@
-﻿using System.Net.Sockets;
-
+﻿using System;
+using System.Net.Sockets;
 namespace ServerClientLib
 {
     public partial class ServerLib
     {
-        private class Connection
+        public class Connection
         {
+            private readonly QueueThread _thread = new QueueThread();
             public Socket Handler { get; private set; }
             public string Id { get; private set; }
 
@@ -15,9 +16,15 @@ namespace ServerClientLib
                 Id = id;
             }
 
-            ~Connection()
+            public void PostJob(Action a)
             {
-                Handler.Disconnect(false);
+                _thread.Enqueue(a);
+            }
+
+            public void Close()
+            {
+                Handler.Shutdown(SocketShutdown.Both);
+                Handler.Close();
                 Handler.Dispose();
             }
         }
