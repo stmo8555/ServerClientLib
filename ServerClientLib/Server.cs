@@ -23,7 +23,7 @@ namespace ServerClientLib
             new Thread(StartListening).Start();
         }
         public delegate void Notify();
-        public event Notify RecievedMessage;
+        public event Notify ReceivedMessage;
         public List<Connection> GetConnection => _connections;
         public string GetMessage()
         {
@@ -54,7 +54,7 @@ namespace ServerClientLib
                 var received= connection.Receive(buffer);
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
-                RecievedMessage?.Invoke();
+                ReceivedMessage?.Invoke();
             }
         }
         

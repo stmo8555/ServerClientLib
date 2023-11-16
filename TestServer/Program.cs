@@ -11,7 +11,7 @@ namespace TestServer
         public static void Main(string[] args)
         {
             var s = new Server(100);
-            s.RecievedMessage += () =>
+            s.ReceivedMessage += () =>
             {
                 Console.WriteLine(s.GetMessage());
                 
