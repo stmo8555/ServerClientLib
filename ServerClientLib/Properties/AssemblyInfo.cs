@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ServerClientLib")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Implenting ServerClientLib for my own applications.\nMade this lib to improve my coding skills and I wouldn't recommend anyone to use it (yet ;) ) ")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Stefanos proggeria")]
 [assembly: AssemblyProduct("ServerClientLib")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]

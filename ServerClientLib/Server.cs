@@ -24,6 +24,7 @@ namespace ServerClientLib
         }
         public delegate void Notify();
         public event Notify ReceivedMessage;
+        public event Notify MaxConnectionReached;
         public List<Connection> GetConnection => _connections;
         public string GetMessage()
         {
@@ -43,14 +44,16 @@ namespace ServerClientLib
                 var connection = new Connection(handler, "p" + _connectionId++);
                 _connections.Add(connection);
                 new Thread(() => Receive(connection)).Start();
-            }   
+            }
+            
+            MaxConnectionReached?.Invoke();
         }
 
         private void Receive(Connection connection)
         {
             while (true)
             {
-                var buffer = new byte[20];
+                var buffer = new byte[255];
                 var received= connection.Receive(buffer);
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
