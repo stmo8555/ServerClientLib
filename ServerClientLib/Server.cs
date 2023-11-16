@@ -4,10 +4,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using ServerClientLib.Utils;
 
 namespace ServerClientLib
 {
-    public partial class Server
+    public class Server
     {
         private readonly int _maxConnections;
         private readonly Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream,ProtocolType.Tcp);
