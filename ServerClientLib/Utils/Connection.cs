@@ -6,7 +6,7 @@ namespace ServerClientLib.Utils
     {
         private Socket _handler;
         private readonly QueueThread _thread = new QueueThread();
-        public string Id { get; private set; }
+        public string Id { get;  set; }
 
         public Connection(Socket handler, string id)
         {

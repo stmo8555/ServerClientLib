@@ -26,7 +26,8 @@ namespace ServerClientLib
 
         public event Action<Connection> ReceivedMessage;
         public event Action MaxConnectionReached;
-        public List<Connection> GetConnection => _connections;
+        public event Action<Connection> NewConnection; 
+        public List<Connection> GetConnections => _connections;
         public string GetMessage()
         {
             return _messageQueue.Dequeue();
@@ -45,6 +46,7 @@ namespace ServerClientLib
                 var connection = new Connection(handler,_connectionId.ToString());
                 _connectionId++;
                 _connections.Add(connection);
+                NewConnection?.Invoke(connection);
                 new Thread(() => Receive(connection)).Start();
             }
             
@@ -62,7 +64,5 @@ namespace ServerClientLib
                 ReceivedMessage?.Invoke(connection);
             }
         }
-        
-        
     }
 }
