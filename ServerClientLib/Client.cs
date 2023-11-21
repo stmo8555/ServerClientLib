@@ -16,20 +16,19 @@ namespace ServerClientLib
         public Client (EndPoint endPoint = null)
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream,ProtocolType.Tcp);
-            socket.Connect(endPoint ?? new IPEndPoint(0,5000));
+            socket.Connect(endPoint ?? new IPEndPoint(IPAddress.Parse("127.0.0.1"),5000));
             _connection = new Connection(socket, "Client");
             new Thread(() => Receive(_connection)).Start();
         }
-
-        public event Action<Connection> ReceivedMessage;
+        public event Action ReceivedMessage;
         public Connection GetConnection => _connection;
         public string GetMessage()
         {
             return _messageQueue.Dequeue();
         }
-        public void Send(string msg,Connection connection)
+        public void Send(string msg)
         {
-            connection.Send(Encoding.UTF8.GetBytes(msg));
+            _connection.Send(Encoding.UTF8.GetBytes(msg));
         }
 
         private void Receive(Connection connection)
@@ -40,7 +39,7 @@ namespace ServerClientLib
                 var received= connection.Receive(buffer);
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
-                ReceivedMessage?.Invoke(connection);
+                ReceivedMessage?.Invoke();
             }
         }
     }
