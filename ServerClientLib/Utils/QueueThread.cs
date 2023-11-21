@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 
 // Stolen from https://michaelscodingspot.com/c-job-queues/ with some tweaks.
-namespace ServerClientLib
+namespace ServerClientLib.Utils
 {
     public class QueueThread
     {
