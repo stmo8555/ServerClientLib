@@ -26,7 +26,8 @@ namespace ServerClientLib
 
         public event Action<Connection> ReceivedMessage;
         public event Action MaxConnectionReached;
-        public event Action<Connection> NewConnection; 
+        public event Action<Connection> NewConnection;
+        public event Action<Connection> DisConnected;
         public List<Connection> GetConnections => _connections;
         public string GetMessage()
         {
@@ -59,10 +60,19 @@ namespace ServerClientLib
             {
                 var buffer = new byte[255];
                 var received= connection.Receive(buffer);
+                if (received <= 0)
+                {
+                    DisConnected?.Invoke(connection);
+                    connection.Close();
+                    if (_maxConnections == _connections.Count)
+                        StartListening();
+                    _connections.Remove(connection);
+                }            
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
                 ReceivedMessage?.Invoke(connection);
             }
         }
+        
     }
 }
