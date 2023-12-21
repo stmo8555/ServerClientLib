@@ -67,6 +67,7 @@ namespace ServerClientLib
                     if (_maxConnections == _connections.Count)
                         StartListening();
                     _connections.Remove(connection);
+                    return;
                 }            
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);

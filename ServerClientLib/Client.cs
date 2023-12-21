@@ -61,6 +61,7 @@ namespace ServerClientLib
                     Disconnected?.Invoke(connection);
                     connection.Close();
                     Connect();
+                    return;
                 }  
                 var msg = Encoding.UTF8.GetString(buffer, 0, received);
                 _messageQueue.Enqueue(msg);
