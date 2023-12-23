@@ -40,6 +40,7 @@ namespace ServerClientLib
 
         public event Action<Connection> Disconnected;
         public event Action ReceivedMessage;
+        
         public Connection GetConnection => _connection;
         public string GetMessage()
         {
